@@ -14,7 +14,16 @@ namespace ParseXmlSerializeXslCompiledTransform
             using (StringReader sr = new StringReader(xml))
             {
                 using (XmlReader xr = XmlReader.Create(sr, new XmlReaderSettings() { ConformanceLevel = ConformanceLevel.Fragment }))
-                return new XPathDocument(xr).CreateNavigator();
+                {
+                    try
+                    {
+                        return new XPathDocument(xr).CreateNavigator();
+                    }
+                    catch (XmlException e)
+                    {
+                        throw new XPathException("String passed to ParseXmlFragment is not a well-formed external entity: " + e.Message);
+                    }
+                }
             }
         }
 
